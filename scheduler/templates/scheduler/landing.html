@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}ImproveClean | Premium Cleaning Services{% endblock %}
+{% block content %}
+<section class="hero row align-items-center mt-4">
+  <div class="col-lg-6">
+    <h1 class="display-5 fw-bold mb-3 text-primary">
+      Premium cleaning teams ready when you are
+    </h1>
+    <p class="lead text-muted">
+      ImproveClean delivers hotel-grade cleaning for homes and offices with transparent scheduling, vetted professionals, and proactive communication.
+    </p>
+    <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+      <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Create your account</a>
+      <a class="btn btn-outline-primary btn-lg" href="#services">Explore services</a>
+    </div>
+  </div>
+  <div class="col-lg-6 mt-4 mt-lg-0 text-center">
+    <img
+      src="https://images.unsplash.com/photo-1581579186989-4c05ff15f6e5?auto=format&fit=crop&w=1000&q=80"
+      class="img-fluid rounded shadow-lg"
+      alt="Professional cleaners at work"
+    />
+  </div>
+</section>
+
+<section id="services" class="mt-5">
+  <div class="row text-center g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title fw-semibold">Standard Cleaning</h3>
+          <p class="card-text text-muted">
+            Recurring weekly or bi-weekly visits to keep your space spotless.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title fw-semibold">Deep &amp; Seasonal</h3>
+          <p class="card-text text-muted">
+            Intensive cleanings targeting buildup, appliances, and detail work.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title fw-semibold">Move In/Out</h3>
+          <p class="card-text text-muted">
+            Prepare properties for new residents with our turnover specialists.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="mt-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-6">
+      <img
+        src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80"
+        class="img-fluid rounded"
+        alt="Cleaning team preparing supplies"
+      />
+    </div>
+    <div class="col-lg-6">
+      <h2 class="fw-bold">Your facilities partner</h2>
+      <p class="text-muted">
+        We combine streamlined scheduling with quality control to ensure every visit exceeds expectations. Monitor your bookings, provide feedback, and adjust services all from your dashboard.
+      </p>
+      <div class="d-flex align-items-center gap-4 mt-3">
+        <div>
+          <h3 class="fw-bold text-primary mb-0">98%</h3>
+          <small class="text-muted">Client satisfaction rate</small>
+        </div>
+        <div>
+          <h3 class="fw-bold text-primary mb-0">24/7</h3>
+          <small class="text-muted">Client concierge support</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="mt-5 text-center">
+  <div class="bg-primary text-white p-5 rounded-4 shadow-lg">
+    <h2 class="fw-bold mb-3">Ready for a better clean?</h2>
+    <p class="mb-4">
+      Our team is on call to create a custom cleaning plan that fits your operations and your budget.
+    </p>
+    <a class="btn btn-light btn-lg" href="mailto:hello@improveclean.com">Talk with sales</a>
+  </div>
+</section>
+{% endblock %}

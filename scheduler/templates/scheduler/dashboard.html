@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Your Dashboard | ImproveClean{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+      <div>
+        <h1 class="h3 fw-bold mb-1">Hello {{ request.user.first_name }}!</h1>
+        <p class="text-muted mb-0">Here is the latest on your cleaning schedule.</p>
+      </div>
+      <div class="mt-3 mt-md-0">
+        <span class="badge bg-primary fs-6">{{ bookings.count }} active bookings</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h2 class="h5 fw-semibold mb-3">Schedule a cleaning</h2>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+          <div class="d-grid">
+            <button class="btn btn-primary" type="submit">Add booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h2 class="h5 fw-semibold mb-3">Upcoming visits</h2>
+        {% if bookings %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Date</th>
+                <th scope="col">Address</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking in bookings %}
+              <tr>
+                <td>{{ booking.service_type|title }}</td>
+                <td>{{ booking.scheduled_for|date:"M d, Y" }} <span class="text-muted">{{ booking.scheduled_for|time:"H:i" }}</span></td>
+                <td>{{ booking.address }}</td>
+                <td>
+                  <span class="badge status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                </td>
+                <td class="text-end">
+                  {% if booking.status != 'cancelled' %}
+                  <form method="post" action="{% url 'cancel_booking' booking.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+                  </form>
+                  {% else %}
+                  <span class="text-muted">No actions</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-5">
+          <p class="mb-1">No cleanings scheduled yet.</p>
+          <p>Use the form to plan your first visit.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

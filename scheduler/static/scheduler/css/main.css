@@ -1,0 +1,54 @@
+body {
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background-color: #f7f9fb;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.hero h1 {
+  color: #0f3460;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1d8cf8 0%, #3358f4 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1275d4 0%, #2447d0 100%);
+}
+
+.card {
+  border-radius: 20px;
+}
+
+.badge.status-scheduled {
+  background-color: #1d8cf8;
+}
+
+.badge.status-in_progress {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.badge.status-completed {
+  background-color: #198754;
+}
+
+.badge.status-cancelled {
+  background-color: #6c757d;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.table > :not(caption) > * > * {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
