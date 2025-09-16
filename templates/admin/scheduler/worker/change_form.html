@@ -1,0 +1,318 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .worker-module {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 1.5rem;
+    border: 1px solid rgba(15, 52, 96, 0.08);
+    box-shadow: 0 10px 24px rgba(15, 52, 96, 0.08);
+  }
+
+  .worker-module .table-responsive {
+    width: 100%;
+  }
+
+  .worker-module .table {
+    width: 100%;
+    margin-bottom: 0;
+    table-layout: fixed;
+  }
+
+  .worker-module .table th,
+  .worker-module .table td {
+    white-space: nowrap;
+  }
+
+  .worker-calendar-card {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(15, 52, 96, 0.1);
+    border: 1px solid rgba(15, 52, 96, 0.08);
+    padding: 1.5rem;
+  }
+
+  .worker-calendar-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .worker-week-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .worker-week-table th,
+  .worker-week-table td {
+    border: 1px solid rgba(15, 52, 96, 0.08);
+    padding: 0.75rem;
+    vertical-align: top;
+  }
+
+  .worker-week-table th {
+    background: rgba(29, 140, 248, 0.08);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.85rem;
+  }
+
+  .worker-day-slots {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .worker-day-slot {
+    border-radius: 12px;
+    border: 1px solid rgba(29, 140, 248, 0.12);
+    background: rgba(246, 249, 255, 0.9);
+    padding: 0.6rem 0.8rem;
+  }
+
+  .worker-day-slot strong {
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .worker-day-slot .meta {
+    color: #54627a;
+    font-size: 0.85rem;
+  }
+
+  .worker-response-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(29, 140, 248, 0.12);
+    color: #3358f4;
+  }
+
+  .worker-response-pill.declined {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+  }
+
+  .worker-response-pill.pending {
+    background: rgba(255, 193, 7, 0.18);
+    color: #b8860b;
+  }
+
+  .response-row {
+    transition: background 0.2s ease;
+  }
+
+  .response-row.accepted {
+    background: rgba(40, 167, 69, 0.08);
+  }
+
+  .response-row.accepted:hover {
+    background: rgba(40, 167, 69, 0.12);
+  }
+
+  .response-row.declined {
+    background: rgba(220, 53, 69, 0.08);
+  }
+
+  .response-row.pending {
+    background: rgba(255, 193, 7, 0.08);
+  }
+
+  .worker-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #1d8cf8, #3358f4);
+    color: #fff !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 18px rgba(29, 140, 248, 0.25);
+  }
+
+  .worker-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 26px rgba(29, 140, 248, 0.3);
+  }
+
+  .worker-action-btn:active {
+    transform: translateY(0);
+  }
+</style>
+{% endblock %}
+
+{% block after_field_sets %}
+{{ block.super }}
+<div class="module worker-module">
+  <h2>{% trans "Contact details" %}</h2>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="text-muted small text-uppercase">{% trans "Email" %}</div>
+      <div class="fw-semibold">{{ original.contact_email|default:_("Not provided") }}</div>
+    </div>
+    <div class="col-md-6">
+      <div class="text-muted small text-uppercase">{% trans "Phone" %}</div>
+      <div class="fw-semibold">{{ original.phone_number|default:_("Not provided") }}</div>
+    </div>
+  </div>
+</div>
+<div class="module worker-module">
+  <h2>{% trans "Upcoming schedule" %}</h2>
+  {% if worker_upcoming_schedule %}
+  <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% trans "When" %}</th>
+        <th>{% trans "Address" %}</th>
+        <th>{% trans "Client" %}</th>
+        <th>{% trans "Service" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th>{% trans "Rush" %}</th>
+        <th>{% trans "Respond" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in worker_upcoming_schedule %}
+      <tr class="response-row {{ booking.worker_response }}">
+        <td>{{ booking.scheduled_for|date:"M d, Y H:i" }}</td>
+        <td>{{ booking.address }}</td>
+        <td>{{ booking.user.get_full_name|default:booking.user.username }}</td>
+        <td>{{ booking.get_service_type_display }}</td>
+        <td>
+          {% if booking.status == 'cancelled' %}
+            ✕ {{ booking.get_status_display }}
+          {% else %}
+            ✓ {{ booking.get_status_display }}
+          {% endif %}
+        </td>
+        <td>{% if booking.rush_cleaning %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+        <td>
+          <a href="{% url 'worker_booking_detail' booking.pk %}?next={{ request.get_full_path|urlencode }}" class="worker-action-btn">{% trans "Open" %}</a>
+          <div class="mt-1">
+            {% if booking.worker_response == 'accepted' %}
+            <span class="worker-response-pill">✓ {{ booking.get_worker_response_display }}</span>
+            {% elif booking.worker_response == 'declined' %}
+            <span class="worker-response-pill declined">✕ {{ booking.get_worker_response_display }}</span>
+            {% else %}
+            <span class="worker-response-pill pending">? {{ booking.get_worker_response_display }}</span>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="quiet">{% trans "No upcoming assignments in the next 20 entries." %}</p>
+  {% endif %}
+</div>
+
+<div class="module worker-module">
+  <h2>{% trans "Recent history" %}</h2>
+  {% if worker_recent_history %}
+  <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% trans "When" %}</th>
+        <th>{% trans "Address" %}</th>
+        <th>{% trans "Client" %}</th>
+        <th>{% trans "Service" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th>{% trans "Respond" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in worker_recent_history %}
+      <tr>
+        <td>{{ booking.scheduled_for|date:"M d, Y H:i" }}</td>
+        <td>{{ booking.address }}</td>
+        <td>{{ booking.user.get_full_name|default:booking.user.username }}</td>
+        <td>{{ booking.get_service_type_display }}</td>
+        <td>
+          {% if booking.status == 'cancelled' %}
+            ✕ {{ booking.get_status_display }}
+          {% else %}
+            ✓ {{ booking.get_status_display }}
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'worker_booking_detail' booking.pk %}?next={{ request.get_full_path|urlencode }}" class="worker-action-btn">{% trans "Open" %}</a>
+          <div class="quiet">{{ booking.get_worker_response_display }}</div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="quiet">{% trans "No recent bookings found." %}</p>
+  {% endif %}
+</div>
+
+{% if worker_week_days %}
+<div class="worker-calendar-card">
+  <h3>{% trans "Weekly calendar (Mon-Sun)" %}</h3>
+  <p class="quiet">{% blocktrans %}Showing {{ worker_week_total }} job(s) scheduled this week.{% endblocktrans %}</p>
+  <div class="table-responsive">
+    <table class="worker-week-table">
+      <thead>
+        <tr>
+          {% for day in worker_week_days %}
+          <th>
+            <div>{{ day.date|date:"D" }}</div>
+            <div class="quiet">{{ day.date|date:"M d" }}</div>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for day in worker_week_days %}
+          <td>
+            {% if day.bookings %}
+            <ul class="worker-day-slots">
+              {% for booking in day.bookings %}
+              <li class="worker-day-slot">
+                <strong>{{ booking.scheduled_for|date:"H:i" }}</strong>
+                <div class="meta">{{ booking.get_service_type_display }}</div>
+                <div class="meta">{{ booking.address }}</div>
+                <div class="meta">
+                  {% if booking.worker_response == 'declined' %}
+                  <span class="worker-response-pill declined">✕ {{ booking.get_worker_response_display }}</span>
+                  {% elif booking.worker_response == 'pending' %}
+                  <span class="worker-response-pill pending">? {{ booking.get_worker_response_display }}</span>
+                  {% else %}
+                  <span class="worker-response-pill">✓ {{ booking.get_worker_response_display }}</span>
+                  {% endif %}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <span class="quiet">{% trans "Off" %}</span>
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

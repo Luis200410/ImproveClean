@@ -3,15 +3,20 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
-from .forms import BookingForm, SignupForm, StyledAuthenticationForm
+from .forms import (
+    BookingForm,
+    SignupForm,
+    StyledAuthenticationForm,
+    WorkWithUsForm,
+)
 from .models import Booking, SERVICE_CHOICES, Worker
 
 
@@ -131,3 +136,64 @@ def cancel_booking(request, pk):
         booking.save(update_fields=["status"])
         messages.info(request, "The booking has been cancelled.")
     return redirect("dashboard")
+
+
+class WorkerBookingDetailView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = "scheduler/worker_booking_detail.html"
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or user.is_superuser
+
+    def get_booking(self):
+        return get_object_or_404(
+            Booking.objects.select_related("worker", "user"), pk=self.kwargs["pk"]
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        booking = self.get_booking()
+        context.update(
+            {
+                "booking": booking,
+                "back_url": self.request.GET.get("next") or reverse("superuser_admin:index"),
+            }
+        )
+        return context
+
+    def post(self, request, *args, **kwargs):
+        booking = self.get_booking()
+        action = request.POST.get("action")
+        if action == "accept":
+            booking.worker_response = "accepted"
+            booking.save(update_fields=["worker_response"])
+            messages.success(request, "The assignment has been marked as accepted.")
+        elif action == "decline":
+            booking.worker_response = "declined"
+            booking.save(update_fields=["worker_response"])
+            messages.warning(request, "The assignment has been marked as declined.")
+        elif action == "reset":
+            booking.worker_response = "pending"
+            booking.save(update_fields=["worker_response"])
+            messages.info(request, "The assignment response has been reset to pending.")
+        else:
+            messages.error(request, "Unknown action requested.")
+
+        redirect_url = request.POST.get("next") or reverse(
+            "worker_booking_detail", kwargs={"pk": booking.pk}
+        )
+        return redirect(redirect_url)
+
+
+class WorkWithUsView(FormView):
+    template_name = "scheduler/work_with_us.html"
+    form_class = WorkWithUsForm
+    success_url = reverse_lazy("work_with_us")
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(
+            self.request,
+            "Thank you for reaching out! Our team will connect with you soon about opportunities at ImproveClean.",
+        )
+        return super().form_valid(form)

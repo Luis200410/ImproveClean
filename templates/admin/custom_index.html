@@ -126,6 +126,99 @@
     margin-top: 2rem;
   }
 
+  .spark-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .spark-item {
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 14px 28px rgba(15, 52, 96, 0.08);
+  }
+
+  .spark-track {
+    background: rgba(29, 140, 248, 0.12);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 0.4rem;
+  }
+
+  .spark-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(29, 140, 248, 0.8), rgba(51, 88, 244, 0.8));
+  }
+
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .mini-table th,
+  .mini-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.08);
+  }
+
+  .mini-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .schedule-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .schedule-item {
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    background: #fdfdff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 12px 24px rgba(15, 52, 96, 0.08);
+  }
+
+  .schedule-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+.status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+    background: rgba(29, 140, 248, 0.12);
+    color: #3358f4;
+  }
+
+  .status-icon.status-completed {
+    background: rgba(40, 167, 69, 0.12);
+    color: #28a745;
+  }
+
+  .status-icon.status-cancelled {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+  }
+
+  .status-icon.status-pending {
+    background: rgba(255, 193, 7, 0.18);
+    color: #b8860b;
+  }
+
   @media (max-width: 991px) {
     .admin-analytics {
       padding: 1.5rem;
@@ -159,6 +252,52 @@
       <h3>Upcoming week</h3>
       <span class="metric">{{ upcoming|length }}</span>
       <span class="text-muted">Scheduled next 7 days</span>
+    </div>
+    <div class="analytics-card">
+      <h3>New bookings (7d)</h3>
+      <span class="metric">{{ created_last_7 }}</span>
+      <span class="text-muted">Created in the last 7 days</span>
+    </div>
+    <div class="analytics-card">
+      <h3>New bookings (30d)</h3>
+      <span class="metric">{{ created_last_30 }}</span>
+      <span class="text-muted">Created in the last 30 days</span>
+    </div>
+    <div class="analytics-card">
+      <h3>Completion rate (30d)</h3>
+      <span class="metric">{{ recent_completion_rate }}<small>%</small></span>
+      <span class="text-muted">{{ recent_completed }} completed</span>
+    </div>
+    <div class="analytics-card">
+      <h3>Cancellation rate (30d)</h3>
+      <span class="metric">{{ recent_cancellation_rate }}<small>%</small></span>
+      <span class="text-muted">{{ recent_cancelled }} cancelled</span>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Operational health</h2>
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h3>Unassigned bookings</h3>
+        <span class="metric">{{ unassigned_total }}</span>
+        <span class="text-muted">{{ upcoming_unassigned }} in the next week</span>
+      </div>
+      <div class="analytics-card">
+        <h3>Avg lead time</h3>
+        <span class="metric">{{ avg_lead_days }}</span>
+        <span class="text-muted">Days from creation to service</span>
+      </div>
+      <div class="analytics-card">
+        <h3>Repeat clients</h3>
+        <span class="metric">{{ repeat_rate }}<small>%</small></span>
+        <span class="text-muted">{{ repeat_clients }} of {{ total_clients }} clients</span>
+      </div>
+      <div class="analytics-card">
+        <h3>New client churn</h3>
+        <span class="metric">{{ new_client_cancellation_rate }}<small>%</small></span>
+        <span class="text-muted">{{ new_client_cancellations }} cancelled bookings (30d)</span>
+      </div>
     </div>
   </div>
 
@@ -210,10 +349,181 @@
           <span class="text-muted small">Bookings assigned</span>
           <span class="badge bg-success-subtle text-success">{{ worker.booking_total }}</span>
         </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="text-muted small">Upcoming week</span>
+          <span class="badge bg-primary-subtle text-primary">{{ worker.upcoming_total }}</span>
+        </div>
       </div>
       {% empty %}
       <p class="text-muted">No active workers yet. Add team members from the Workers admin.</p>
       {% endfor %}
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Workforce utilization</h2>
+    <div class="table-responsive">
+      <table class="upcoming-table mini-table">
+        <thead>
+          <tr>
+            <th>Professional</th>
+            <th class="text-end">Upcoming (7d)</th>
+            <th class="text-end">Lifetime bookings</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for worker in worker_utilization %}
+          <tr>
+            <td>{{ worker.name }}</td>
+            <td class="text-end">{{ worker.upcoming_total }}</td>
+            <td class="text-end">{{ worker.lifetime_total }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-center text-muted">No workers found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if idle_workers %}
+    <p class="text-muted small mt-2">Idle next week: {% for worker in idle_workers %}{{ worker.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Worker schedules (next 7 days)</h2>
+    <div class="row g-3">
+      {% for entry in worker_schedules %}
+      <div class="col-xl-4 col-md-6">
+        <div class="analytics-card h-100">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">{{ entry.worker.name }}</div>
+              <div class="text-muted small">{{ entry.worker.get_service_focus_display|default:"Team member" }}</div>
+              {% if entry.worker.phone_number or entry.worker.contact_email %}
+              <div class="text-muted small">
+                {% if entry.worker.phone_number %}<span class="me-2">📞 {{ entry.worker.phone_number }}</span>{% endif %}
+                {% if entry.worker.contact_email %}✉️ {{ entry.worker.contact_email }}{% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <span class="badge bg-primary-subtle text-primary">{{ entry.bookings|length }} jobs</span>
+          </div>
+          {% if entry.bookings %}
+          <ul class="schedule-list">
+            {% for booking in entry.bookings %}
+            <li class="schedule-item">
+              <a class="schedule-item-link" href="{% url 'worker_booking_detail' booking.pk %}?next={{ request.get_full_path|urlencode }}">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="d-flex">
+                  {% if booking.worker_response == 'accepted' %}
+                  <span class="status-icon status-completed">✓</span>
+                  {% elif booking.worker_response == 'declined' or booking.status == 'cancelled' %}
+                  <span class="status-icon status-cancelled">✕</span>
+                  {% elif booking.worker_response == 'pending' %}
+                  <span class="status-icon status-pending">?</span>
+                  {% else %}
+                  <span class="status-icon">✓</span>
+                  {% endif %}
+                  <div>
+                    <div class="fw-semibold">{{ booking.scheduled_for|date:"M d, H:i" }}</div>
+                    <div class="text-muted small">{{ booking.address }}</div>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-light text-muted">{{ booking.get_service_type_display }}</span>
+                  <div class="text-muted small">{{ booking.get_worker_response_display }}</div>
+                  <div class="text-muted small">{{ booking.get_status_display }}</div>
+                </div>
+              </div>
+              <div class="text-muted small mt-2">
+                <strong>{{ booking.user.get_full_name|default:booking.user.username }}</strong>
+                {% if booking.user.email %}
+                · <a href="mailto:{{ booking.user.email }}" class="text-decoration-none">{{ booking.user.email }}</a>
+                {% endif %}
+              </div>
+              {% if booking.rush_cleaning %}
+              <div class="text-warning small mt-1">Rush cleaning</div>
+              {% endif %}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-muted small mb-0">No assignments scheduled this week.</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Demand patterns (last 30 days)</h2>
+    <div class="row g-3">
+      <div class="col-lg-6">
+        <div class="analytics-card">
+          <h3>By weekday</h3>
+          <div class="spark-list">
+            {% for item in weekday_mix %}
+            <div class="spark-item">
+              <div class="d-flex justify-content-between">
+                <span class="fw-semibold">{{ item.label }}</span>
+                <span class="text-muted">{{ item.total }}</span>
+              </div>
+              <div class="spark-track">
+                <span class="spark-fill" style="width: {% if weekday_peak %}{% widthratio item.total weekday_peak 100 %}{% else %}0{% endif %}%"></span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="analytics-card">
+          <h3>By hour</h3>
+          <div class="spark-list">
+            {% for item in hourly_mix %}
+            <div class="spark-item">
+              <div class="d-flex justify-content-between">
+                <span class="fw-semibold">{{ item.label }}</span>
+                <span class="text-muted">{{ item.total }}</span>
+              </div>
+              <div class="spark-track">
+                <span class="spark-fill" style="width: {% if hourly_peak %}{% widthratio item.total hourly_peak 100 %}{% else %}0{% endif %}%"></span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Rush ratio trend</h2>
+    <div class="table-responsive">
+      <table class="upcoming-table mini-table">
+        <thead>
+          <tr>
+            <th>Week starting</th>
+            <th class="text-end">Bookings</th>
+            <th class="text-end">Rush jobs</th>
+            <th class="text-end">Rush ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rush_trend %}
+          <tr>
+            <td>{{ row.week|date:"M d" }}</td>
+            <td class="text-end">{{ row.total }}</td>
+            <td class="text-end">{{ row.rush }}</td>
+            <td class="text-end">{{ row.ratio }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center text-muted">No booking activity recorded.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -244,6 +554,27 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Admin reach (page views)</h2>
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h3>All time views</h3>
+        <span class="metric">{{ page_view_total }}</span>
+        <span class="text-muted">{{ unique_admins_30 }} unique admins (30d)</span>
+      </div>
+      <div class="analytics-card">
+        <h3>30 day views</h3>
+        <span class="metric">{{ page_view_30 }}</span>
+        <span class="text-muted">{{ unique_sessions_30 }} unique sessions</span>
+      </div>
+      <div class="analytics-card">
+        <h3>7 day views</h3>
+        <span class="metric">{{ page_view_7 }}</span>
+        <span class="text-muted">Last seen {{ last_page_view.viewed_at|date:"M d, H:i" }}</span>
+      </div>
     </div>
   </div>
 </div>

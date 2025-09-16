@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from .models import Booking, SERVICE_CHOICES, Worker
+from .models import Application, Booking, SERVICE_CHOICES, Worker
 
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -84,3 +84,27 @@ class BookingForm(forms.ModelForm):
         if scheduled_for < timezone.now():
             raise forms.ValidationError("Bookings must be scheduled in the future.")
         return scheduled_for
+
+
+class WorkWithUsForm(forms.Form):
+    full_name = forms.CharField(max_length=120, label="Full name")
+    email = forms.EmailField(label="Email")
+    phone = forms.CharField(max_length=30, label="Phone", required=False)
+    experience = forms.CharField(
+        label="Relevant experience",
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.setdefault("class", "form-control")
+
+    def save(self) -> Application:
+        data = self.cleaned_data
+        return Application.objects.create(
+            full_name=data["full_name"],
+            email=data["email"],
+            phone=data["phone"],
+            experience=data["experience"],
+        )

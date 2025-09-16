@@ -9,6 +9,8 @@ from .views import (
     LandingView,
     RegisterView,
     ServicesView,
+    WorkerBookingDetailView,
+    WorkWithUsView,
     cancel_booking,
 )
 
@@ -22,4 +24,10 @@ urlpatterns = [
     path("logout/", AuthLogoutView.as_view(), name="logout"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("bookings/<int:pk>/cancel/", cancel_booking, name="cancel_booking"),
+    path(
+        "worker/bookings/<int:pk>/",
+        WorkerBookingDetailView.as_view(),
+        name="worker_booking_detail",
+    ),
+    path("work-with-us/", WorkWithUsView.as_view(), name="work_with_us"),
 ]

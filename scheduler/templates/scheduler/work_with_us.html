@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Join Our Team · ImproveClean{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold text-primary">Join the ImproveClean Professionals</h1>
+      <p class="lead text-muted mt-3">
+        We are always looking for dedicated cleaners who care about delivering a premium experience. Tell us a little bit about yourself and we'll reach out with next steps.
+      </p>
+      <ul class="list-unstyled mt-4">
+        <li class="d-flex align-items-start mb-3">
+          <span class="badge bg-primary me-3 rounded-pill">1</span>
+          <div>
+            <strong>Flexible scheduling</strong>
+            <div class="text-muted">Pick shifts that align with your availability and lifestyle.</div>
+          </div>
+        </li>
+        <li class="d-flex align-items-start mb-3">
+          <span class="badge bg-primary me-3 rounded-pill">2</span>
+          <div>
+            <strong>Premium clients</strong>
+            <div class="text-muted">Work with households who appreciate quality and consistency.</div>
+          </div>
+        </li>
+        <li class="d-flex align-items-start">
+          <span class="badge bg-primary me-3 rounded-pill">3</span>
+          <div>
+            <strong>Growth support</strong>
+            <div class="text-muted">Access training, tips, and a concierge team invested in your success.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 mb-4">Tell us about you</h2>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+              <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}</label>
+              {{ field }}
+              {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+              {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary btn-lg w-100">Submit application</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

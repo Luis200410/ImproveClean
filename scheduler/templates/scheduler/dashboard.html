@@ -77,6 +77,12 @@
                 <span class="worker-meta">
                   <span class="worker-name">{{ worker.name }}</span>
                   <span class="worker-role text-muted">{{ worker.get_service_focus_display }} · {{ worker.experience_years }} yrs exp.</span>
+                  {% if worker.contact_email or worker.phone_number %}
+                  <span class="text-muted small">
+                    {% if worker.phone_number %}<span class="me-2">📞 {{ worker.phone_number }}</span>{% endif %}
+                    {% if worker.contact_email %}✉️ {{ worker.contact_email }}{% endif %}
+                  </span>
+                  {% endif %}
                 </span>
               </label>
               {% empty %}
@@ -138,6 +144,12 @@
                     <div>
                       <div class="fw-semibold">{{ booking.worker.name }}</div>
                       <div class="text-muted small">{{ booking.worker.get_service_focus_display }}</div>
+                      {% if booking.worker.phone_number or booking.worker.contact_email %}
+                      <div class="text-muted small">
+                        {% if booking.worker.phone_number %}<span class="me-2">📞 {{ booking.worker.phone_number }}</span>{% endif %}
+                        {% if booking.worker.contact_email %}✉️ {{ booking.worker.contact_email }}{% endif %}
+                      </div>
+                      {% endif %}
                     </div>
                   </div>
                   {% else %}
@@ -234,6 +246,12 @@
               Choose {{ worker.name }}
             </button>
           </div>
+          {% if worker.contact_email or worker.phone_number %}
+          <div class="mt-3 text-muted small">
+            {% if worker.phone_number %}<div>📞 {{ worker.phone_number }}</div>{% endif %}
+            {% if worker.contact_email %}<div>✉️ {{ worker.contact_email }}</div>{% endif %}
+          </div>
+          {% endif %}
         </div>
       </div>
       {% empty %}

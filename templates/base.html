@@ -41,6 +41,9 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'services' %}">Services</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'work_with_us' %}">Work with us</a>
+            </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
@@ -106,6 +109,7 @@
         <div class="footer-links">
           <a class="text-white me-3" href="{% url 'services' %}">Services</a>
           <a class="text-white me-3" href="{% url 'about' %}">About</a>
+          <a class="text-white me-3" href="{% url 'work_with_us' %}">Join our team</a>
           <a class="text-white" href="mailto:hello@improveclean.com">Contact</a>
         </div>
       </div>
