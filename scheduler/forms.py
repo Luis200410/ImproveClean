@@ -52,13 +52,6 @@ class BookingForm(forms.ModelForm):
         widget=forms.RadioSelect(attrs={"class": "visually-hidden worker-choice"}),
         label="Preferred professional",
     )
-    rush_cleaning = forms.BooleanField(
-        required=False,
-        label="Rush cleaning",
-        help_text="Rush cleanings are prioritized within 6 hours and incur an additional fee.",
-        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
-    )
-
     class Meta:
         model = Booking
         fields = (
@@ -66,7 +59,6 @@ class BookingForm(forms.ModelForm):
             "scheduled_for",
             "address",
             "worker",
-            "rush_cleaning",
             "notes",
         )
         widgets = {
@@ -82,7 +74,7 @@ class BookingForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["worker"].queryset = Worker.objects.filter(is_active=True)
         for name, field in self.fields.items():
-            if name in ("rush_cleaning", "worker"):
+            if name in ("worker",):
                 continue
             if name not in self.Meta.widgets:
                 field.widget.attrs.setdefault("class", "form-control")

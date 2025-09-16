@@ -604,6 +604,32 @@ footer {
   font-size: 0.875rem;
 }
 
+.navbar-nav .dropdown-menu {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0;
+  visibility: hidden;
+  display: block;
+  transform: translateY(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(15, 52, 96, 0.08);
+  box-shadow: 0 18px 38px rgba(15, 52, 96, 0.12);
+}
+
+.navbar-nav .dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
 .landing-hero {
   background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 38%, #dfe9ff 100%);
   padding: 3.5rem 3rem;

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -5,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
@@ -89,6 +92,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 "team_search": search_query,
                 "service_choices": SERVICE_CHOICES,
                 "selected_worker_id": selected_worker_id,
+                "rush_threshold_hours": 5,
             }
         )
         return context
@@ -98,11 +102,17 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
+            rush_threshold = timezone.now() + timedelta(hours=5)
+            booking.rush_cleaning = booking.scheduled_for <= rush_threshold
             booking.save()
             worker_text = (
                 f" with {booking.worker.name}" if booking.worker else ""
             )
-            rush_text = " Rush service requested." if booking.rush_cleaning else ""
+            rush_text = (
+                " Rush service applied automatically based on your requested time."
+                if booking.rush_cleaning
+                else ""
+            )
             messages.success(
                 request,
                 "Your cleaning has been scheduled"

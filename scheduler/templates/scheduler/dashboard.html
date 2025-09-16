@@ -34,6 +34,7 @@
             {% for error in form.scheduled_for.errors %}
             <div class="text-danger small">{{ error }}</div>
             {% endfor %}
+            <div class="form-text">Requests within the next {{ rush_threshold_hours }} hours are automatically handled as rush cleanings.</div>
           </div>
 
           <div class="mb-3">
@@ -83,17 +84,6 @@
               {% endfor %}
             </div>
             {% for error in form.worker.errors %}
-            <div class="text-danger small">{{ error }}</div>
-            {% endfor %}
-          </div>
-
-          <div class="mb-3 form-check">
-            {{ form.rush_cleaning }}
-            <label class="form-check-label" for="{{ form.rush_cleaning.id_for_label }}">Rush cleaning</label>
-            {% if form.rush_cleaning.help_text %}
-            <div class="form-text">{{ form.rush_cleaning.help_text }}</div>
-            {% endif %}
-            {% for error in form.rush_cleaning.errors %}
             <div class="text-danger small">{{ error }}</div>
             {% endfor %}
           </div>
