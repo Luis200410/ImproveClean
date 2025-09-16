@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block title %}Services | ImproveClean{% endblock %}
+{% block content %}
+<section class="services-hero animate-fade-up mb-5">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-6">
+      <span class="badge rounded-pill bg-primary-soft text-uppercase mb-3 fw-semibold">Trusted cleaning partner</span>
+      <h1 class="display-5 fw-bold mb-4">Programs engineered for pristine, high-performing spaces</h1>
+      <p class="lead text-secondary mb-4">
+        Whether you manage residences, offices, or event venues, ImproveClean delivers tailored teams, high-touch communication, and measurable quality with every visit.
+      </p>
+      <ul class="hero-list text-body-secondary">
+        <li class="animate-rise" style="--delay: .1s">Certified specialists trained for hospitality, medical, and corporate environments</li>
+        <li class="animate-rise" style="--delay: .18s">Adaptive schedules with proactive alerts and seamless rescheduling</li>
+        <li class="animate-rise" style="--delay: .26s">Insights dashboard to track completion, feedback, and consumable levels</li>
+      </ul>
+      <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+        <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Design my plan</a>
+        <a class="btn btn-outline-primary btn-lg" href="mailto:hello@improveclean.com">Consult an expert</a>
+      </div>
+    </div>
+    <div class="col-lg-5 ms-lg-auto">
+      <div class="hero-visual-stack">
+        <div class="hero-gallery animate-rise" style="--delay: .05s">
+          <img
+            src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80"
+            alt="Cleaner preparing supplies"
+            class="img-fluid rounded-4 shadow"
+            loading="lazy"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80"
+            alt="Modern office lobby being cleaned"
+            class="img-fluid rounded-4 shadow"
+            loading="lazy"
+          />
+        </div>
+        <div class="hero-card p-4 p-lg-5 animate-rise" style="--delay: .15s">
+          <div class="d-flex align-items-center mb-4">
+            <span class="hero-icon material-icon me-3">sparkles</span>
+            <div>
+              <p class="mb-1 text-uppercase small text-muted">Average client score</p>
+              <h3 class="fw-bold mb-0 text-dark">4.9 / 5</h3>
+            </div>
+          </div>
+          <p class="mb-4 text-secondary">
+            “ImproveClean is the only partner that treats our facilities like flagship locations. Communication, follow-up, and results are unmatched.”
+          </p>
+          <div class="d-flex align-items-center">
+            <div class="avatar avatar-sm me-3" style="background-image: url('https://images.unsplash.com/photo-1573497491765-dccce02f8590?auto=format&fit=crop&w=200&q=80');"></div>
+            <div>
+              <p class="mb-0 fw-semibold text-dark">Hannah Rhodes</p>
+              <span class="small text-muted">Director of Operations, Halo Ventures</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="service-grid mb-5 animate-fade-up" style="--delay: .05s">
+  <div class="row g-4">
+    <div class="col-xl-4 col-lg-6">
+      <div class="service-card is-featured h-100 animate-rise" style="--delay: .1s">
+        <div class="service-card__label">Most requested</div>
+        <div class="service-icon">
+          <span class="material-icon">home</span>
+        </div>
+        <h3 class="h4 fw-semibold">Signature Home Care</h3>
+        <p class="text-muted">
+          Weekly or bi-weekly rotations that keep residences immaculate with concierge-level detail—perfect for primary homes, short-term rentals, and executive suites.
+        </p>
+        <ul class="service-card__list">
+          <li class="animate-rise" style="--delay: .35s">Personalized checklist synced to each visit</li>
+          <li class="animate-rise" style="--delay: .43s">Linen refresh, appliance detail, and aromatherapy available</li>
+          <li class="animate-rise" style="--delay: .51s">Same-team guarantee for continuity and trust</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="service-card h-100 animate-rise" style="--delay: .2s">
+        <div class="service-icon">
+          <span class="material-icon">apartment</span>
+        </div>
+        <h3 class="h4 fw-semibold">Luxury Move Readiness</h3>
+        <p class="text-muted">
+          Deep transformations before move-in or after move-out. We reset kitchens, baths, flooring, and fixtures so every walkthrough feels brand new.
+        </p>
+        <ul class="service-card__list">
+          <li class="animate-rise" style="--delay: .4s">48-hour turnaround with guaranteed inspections</li>
+          <li class="animate-rise" style="--delay: .48s">Photo and video documentation packaged for property managers</li>
+          <li class="animate-rise" style="--delay: .56s">Specialty stain, grout, and hard surface restoration</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="service-card h-100 animate-rise" style="--delay: .3s">
+        <div class="service-icon">
+          <span class="material-icon">corporate_fare</span>
+        </div>
+        <h3 class="h4 fw-semibold">Office &amp; Workplace</h3>
+        <p class="text-muted">
+          Dedicated day porters and evening crews who protect productivity and brand standards in offices, coworking hubs, and production environments.
+        </p>
+        <ul class="service-card__list">
+          <li class="animate-rise" style="--delay: .45s">Touchpoint disinfection aligned with WELL &amp; LEED guidelines</li>
+          <li class="animate-rise" style="--delay: .53s">Supply management with automated restock alerts</li>
+          <li class="animate-rise" style="--delay: .61s">Secure access protocols and badge integrations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="service-showcase animate-fade-up" style="--delay: .12s">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <div class="showcase-gallery">
+        <img
+          src="https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=900&q=80"
+          alt="Luxury apartment living room in Manhattan"
+          class="rounded-4 shadow-lg"
+          loading="lazy"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1486401899868-0e435ed85128?auto=format&fit=crop&w=900&q=80"
+          alt="Office cleaning team in Midtown"
+          class="rounded-4 shadow-lg"
+          loading="lazy"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80"
+          alt="Event venue reset in Brooklyn"
+          class="rounded-4 shadow-lg"
+          loading="lazy"
+        />
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <span class="badge rounded-pill bg-primary-soft text-uppercase mb-3">Immersive results</span>
+      <h2 class="fw-semibold mb-3">Spaces that photograph as pristine as they feel</h2>
+      <p class="text-muted mb-4">
+        Every ImproveClean program includes visual sign-offs. Our crews document the details so you can share ready-to-use rooms with residents, guests, and executives instantly.
+      </p>
+      <div class="row g-3 text-muted small showcase-highlights">
+        <div class="col-sm-6">
+          <div class="highlight-tile p-3 rounded-4 h-100">
+            <strong class="d-block text-dark">Premium finishes</strong>
+            <span>Stainless, stone, and glass polished with surface-specific care.</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="highlight-tile p-3 rounded-4 h-100">
+            <strong class="d-block text-dark">Photo-ready staging</strong>
+            <span>Beds, seating, and amenities aligned for immediate tours.</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="highlight-tile p-3 rounded-4 h-100">
+            <strong class="d-block text-dark">On-brand ambiance</strong>
+            <span>Room fragrance, lighting, and touchpoint presentation dialed in.</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="highlight-tile p-3 rounded-4 h-100">
+            <strong class="d-block text-dark">Before &amp; after proof</strong>
+            <span>High-res galleries stored alongside each service ticket.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process-grid mb-5 animate-fade-up" style="--delay: .1s">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-5">
+      <span class="badge rounded-pill bg-primary-soft text-uppercase mb-3">How it works</span>
+      <h2 class="fw-semibold mb-4">A streamlined onboarding that puts you in control</h2>
+      <p class="text-muted">
+        We bring together customer success managers, onsite supervisors, and data-driven QA to ensure a smooth launch and consistent quality.
+      </p>
+    </div>
+    <div class="col-lg-7">
+      <div class="timeline">
+        <div class="timeline-step animate-rise" style="--delay: .1s">
+          <div class="timeline-marker">1</div>
+          <div>
+            <h3 class="h6 fw-semibold mb-1">Discovery &amp; site walk</h3>
+            <p class="text-muted mb-0">
+              Assess spaces, traffic patterns, and priorities to craft your ideal scope of work and cadence.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-step animate-rise" style="--delay: .2s">
+          <div class="timeline-marker">2</div>
+          <div>
+            <h3 class="h6 fw-semibold mb-1">Custom program design</h3>
+            <p class="text-muted mb-0">
+              Choose services, add-ons, and scheduling windows; review transparent pricing and KPIs in your dashboard.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-step animate-rise" style="--delay: .3s">
+          <div class="timeline-marker">3</div>
+          <div>
+            <h3 class="h6 fw-semibold mb-1">Launch &amp; continuous QA</h3>
+            <p class="text-muted mb-0">
+              Your dedicated crew begins service backed by digital checklists, quality audits, and proactive communication.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="addons-grid mb-5 animate-fade-up" style="--delay: .15s">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="addon-card h-100 animate-rise" style="--delay: .15s">
+        <h3 class="h6 text-uppercase text-primary fw-semibold">Enhancements</h3>
+        <p class="text-muted">Build an elevated experience with specialty services managed by your success team.</p>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="row g-4">
+        <div class="col-sm-6">
+          <div class="addon-card h-100 animate-rise" style="--delay: .2s">
+            <h4 class="h6 fw-semibold mb-2">Electrostatic disinfection</h4>
+            <p class="text-muted small mb-0">
+              Rapid-response crews prepare event venues or high-traffic offices using EPA List N solutions.
+            </p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="addon-card h-100 animate-rise" style="--delay: .25s">
+            <h4 class="h6 fw-semibold mb-2">Specialty floor care</h4>
+            <p class="text-muted small mb-0">
+              Marble, terrazzo, and hardwood restoration performed by trained technicians.
+            </p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="addon-card h-100 animate-rise" style="--delay: .3s">
+            <h4 class="h6 fw-semibold mb-2">Amenity management</h4>
+            <p class="text-muted small mb-0">
+              Concierge stocking for towels, toiletries, refreshments, and branded welcome kits.
+            </p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="addon-card h-100 animate-rise" style="--delay: .35s">
+            <h4 class="h6 fw-semibold mb-2">Sustainability reporting</h4>
+            <p class="text-muted small mb-0">
+              Quarterly insights on chemical usage, waste diversion, and air-quality benchmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner text-center rounded-4 p-5 animate-fade-up" style="--delay: .2s">
+  <h2 class="fw-bold mb-3">Ready for a cleaner, calmer operation?</h2>
+  <p class="text-white-50 mb-4">Share your floor plans and schedule preferences—we’ll deliver a tailored roadmap within one business day.</p>
+  <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+    <a class="btn btn-light btn-lg" href="{% url 'register' %}">Start my proposal</a>
+    <a class="btn btn-outline-light btn-lg" href="mailto:hello@improveclean.com">Schedule a walkthrough</a>
+  </div>
+</section>
+{% endblock %}

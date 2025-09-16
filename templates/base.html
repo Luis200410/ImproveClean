@@ -11,6 +11,10 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0"
+    />
     <link rel="stylesheet" href="{% static 'scheduler/css/main.css' %}" />
     {% block extra_head %}{% endblock %}
   </head>
@@ -31,17 +35,38 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'services' %}">Services</a>
+            </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
             </li>
-            <li class="nav-item">
-              <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="btn btn-outline-primary ms-lg-3" type="submit">
-                  Sign out
-                </button>
-              </form>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="accountDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+              >
+                {{ user.first_name|default:user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="{% url 'dashboard' %}">Manage bookings</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="dropdown-item" type="submit">Sign out</button>
+                  </form>
+                </li>
+              </ul>
             </li>
             {% else %}
             <li class="nav-item">
@@ -75,9 +100,9 @@
       <div class="container d-flex flex-column flex-md-row justify-content-between">
         <p class="mb-0">&copy; {% now "Y" %} ImproveClean. All rights reserved.</p>
         <div class="footer-links">
-          <a class="text-white me-3" href="#services">Services</a>
-          <a class="text-white me-3" href="#about">About</a>
-          <a class="text-white" href="#contact">Contact</a>
+          <a class="text-white me-3" href="{% url 'services' %}">Services</a>
+          <a class="text-white me-3" href="{% url 'about' %}">About</a>
+          <a class="text-white" href="mailto:hello@improveclean.com">Contact</a>
         </div>
       </div>
     </footer>
@@ -87,6 +112,36 @@
       integrity="sha384-4cm2b7xvFeoDyAJ6Digw1k3D6Z0fjQX+0Gooy2cuglRez2oJ6TP2PumoefRg1hZ7"
       crossorigin="anonymous"
     ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var bs = window.bootstrap;
+        if (!bs) {
+          return;
+        }
+
+        document
+          .querySelectorAll('[data-bs-toggle="dropdown"]')
+          .forEach(function (toggle) {
+            bs.Dropdown.getOrCreateInstance(toggle);
+            toggle.addEventListener("click", function (event) {
+              event.preventDefault();
+            });
+          });
+
+        document
+          .querySelectorAll('[data-bs-toggle="collapse"]')
+          .forEach(function (toggle) {
+            var selector = toggle.getAttribute("data-bs-target");
+            if (!selector) {
+              return;
+            }
+            var target = document.querySelector(selector);
+            if (target) {
+              bs.Collapse.getOrCreateInstance(target, { toggle: false });
+            }
+          });
+      });
+    </script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

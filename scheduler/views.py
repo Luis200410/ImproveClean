@@ -16,6 +16,14 @@ class LandingView(TemplateView):
     template_name = "scheduler/landing.html"
 
 
+class AboutView(TemplateView):
+    template_name = "scheduler/about.html"
+
+
+class ServicesView(TemplateView):
+    template_name = "scheduler/services.html"
+
+
 class RegisterView(FormView):
     form_class = SignupForm
     template_name = "scheduler/register.html"
