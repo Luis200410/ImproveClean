@@ -1,0 +1,256 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  :root {
+    --card-bg: #ffffff;
+    --card-border: rgba(15, 52, 96, 0.08);
+    --accent-primary: #1d8cf8;
+    --accent-dark: #0f1f3d;
+  }
+
+  .admin-analytics {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f6f9ff 0%, #eef4ff 60%, #e0ebff 100%);
+    border-radius: 26px;
+    box-shadow: 0 24px 48px rgba(15, 52, 96, 0.18);
+  }
+
+  .analytics-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin-top: 1rem;
+  }
+
+  .analytics-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(15, 52, 96, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .analytics-card h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #637089;
+  }
+
+  .analytics-card .metric {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+  }
+
+  .status-grid, .service-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .status-item, .service-item {
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 1rem;
+    box-shadow: 0 16px 32px rgba(15, 52, 96, 0.1);
+  }
+
+  .progress-bar {
+    background: rgba(29, 140, 248, 0.12);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+
+  .progress-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(29, 140, 248, 0.8), rgba(51, 88, 244, 0.8));
+  }
+
+  .worker-rankings {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .worker-card {
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .worker-card .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e9ff, #f5f9ff);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #2f3f52;
+  }
+
+  .upcoming-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .upcoming-table th,
+  .upcoming-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.08);
+  }
+
+  .upcoming-table tbody tr:hover {
+    background: rgba(29, 140, 248, 0.06);
+  }
+
+  .app-list-wrapper {
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 991px) {
+    .admin-analytics {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-analytics">
+  <h1 class="display-6 mb-3">Concierge Analytics</h1>
+  <p class="text-muted mb-4">Monitor bookings, rush demand, and staffing insights across the ImproveClean portfolio.</p>
+
+  <div class="analytics-grid">
+    <div class="analytics-card">
+      <h3>Total bookings</h3>
+      <span class="metric">{{ total_bookings }}</span>
+      <span class="text-muted">All time</span>
+    </div>
+    <div class="analytics-card">
+      <h3>Rush cleanings</h3>
+      <span class="metric">{{ rush_total }}</span>
+      <span class="text-muted">Auto-flagged requests</span>
+    </div>
+    <div class="analytics-card">
+      <h3>New clients (30d)</h3>
+      <span class="metric">{{ new_users }}</span>
+      <span class="text-muted">Recently onboarded</span>
+    </div>
+    <div class="analytics-card">
+      <h3>Upcoming week</h3>
+      <span class="metric">{{ upcoming|length }}</span>
+      <span class="text-muted">Scheduled next 7 days</span>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Booking status distribution</h2>
+    <div class="status-grid">
+      {% for item in status_summary %}
+      <div class="status-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">{{ item.label }}</span>
+          <span class="badge bg-primary-subtle text-primary">{{ item.total }}</span>
+        </div>
+        <div class="progress-bar">
+          <span style="width: {{ item.percent }}%"></span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Service mix</h2>
+    <div class="service-grid">
+      {% for item in service_summary %}
+      <div class="service-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">{{ item.label }}</span>
+          <span class="badge bg-info-subtle text-info">{{ item.total }}</span>
+        </div>
+        <small class="text-muted">{{ item.total }} bookings</small>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Top professionals</h2>
+    <div class="worker-rankings">
+      {% for worker in worker_rankings %}
+      <div class="worker-card">
+        <div class="d-flex align-items-center gap-3">
+          <span class="avatar">{{ worker.name|first }}</span>
+          <div>
+            <div class="fw-semibold">{{ worker.name }}</div>
+            <div class="text-muted small">{{ worker.get_service_focus_display }} · {{ worker.experience_years }} yrs</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="text-muted small">Bookings assigned</span>
+          <span class="badge bg-success-subtle text-success">{{ worker.booking_total }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted">No active workers yet. Add team members from the Workers admin.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="h5 mb-3">Upcoming week</h2>
+    <div class="table-responsive">
+      <table class="upcoming-table">
+        <thead>
+          <tr>
+            <th>When</th>
+            <th>Client</th>
+            <th>Service</th>
+            <th>Professional</th>
+            <th>Rush</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in upcoming %}
+          <tr>
+            <td>{{ booking.scheduled_for|date:"M d, H:i" }}</td>
+            <td>{{ booking.user.get_full_name|default:booking.user.username }}</td>
+            <td>{{ booking.get_service_type_display }}</td>
+            <td>{% if booking.worker %}{{ booking.worker.name }}{% else %}<span class="text-muted">Unassigned</span>{% endif %}</td>
+            <td>{% if booking.rush_cleaning %}<span class="badge bg-warning text-dark">Rush</span>{% else %}<span class="badge bg-light text-muted">Standard</span>{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">No upcoming bookings in the next week.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="app-list-wrapper">
+  {{ block.super }}
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
