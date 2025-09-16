@@ -58,7 +58,11 @@
                 {{ user.first_name|default:user.username }}
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="{% url 'account' %}">My account</a></li>
                 <li><a class="dropdown-item" href="{% url 'dashboard' %}">Manage bookings</a></li>
+                {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'superuser_admin:index' %}">Admin</a></li>
+                {% endif %}
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <form method="post" action="{% url 'logout' %}">
@@ -109,37 +113,58 @@
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-4cm2b7xvFeoDyAJ6Digw1k3D6Z0fjQX+0Gooy2cuglRez2oJ6TP2PumoefRg1hZ7"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var bs = window.bootstrap;
-        if (!bs) {
-          return;
-        }
+        var navToggler = document.querySelector(".navbar-toggler");
+        var navMenu = document.getElementById("navbarNav");
 
-        document
-          .querySelectorAll('[data-bs-toggle="dropdown"]')
-          .forEach(function (toggle) {
-            bs.Dropdown.getOrCreateInstance(toggle);
-            toggle.addEventListener("click", function (event) {
-              event.preventDefault();
+        if (navToggler && navMenu) {
+          navToggler.addEventListener("click", function () {
+            var isOpen = navMenu.classList.toggle("show");
+            navToggler.setAttribute("aria-expanded", String(isOpen));
+          });
+
+          navMenu.querySelectorAll(".nav-link:not(.dropdown-toggle)").forEach(function (link) {
+            link.addEventListener("click", function () {
+              if (navMenu.classList.contains("show")) {
+                navMenu.classList.remove("show");
+                navToggler.setAttribute("aria-expanded", "false");
+              }
             });
           });
+        }
 
-        document
-          .querySelectorAll('[data-bs-toggle="collapse"]')
-          .forEach(function (toggle) {
-            var selector = toggle.getAttribute("data-bs-target");
-            if (!selector) {
+        document.querySelectorAll(".nav-item.dropdown > .nav-link").forEach(function (toggle) {
+          toggle.addEventListener("click", function (event) {
+            var dropdownMenu = toggle.nextElementSibling;
+            if (!dropdownMenu) {
               return;
             }
-            var target = document.querySelector(selector);
-            if (target) {
-              bs.Collapse.getOrCreateInstance(target, { toggle: false });
-            }
+            var isOpen = dropdownMenu.classList.toggle("show");
+            toggle.setAttribute("aria-expanded", String(isOpen));
           });
+        });
+
+        document.addEventListener("click", function (event) {
+          var isToggle = event.target.closest(".nav-item.dropdown");
+          document.querySelectorAll(".nav-item.dropdown").forEach(function (dropdown) {
+            var menu = dropdown.querySelector(".dropdown-menu");
+            var toggle = dropdown.querySelector(".dropdown-toggle");
+            if (!menu || !toggle) {
+              return;
+            }
+
+            if (dropdown.contains(event.target)) {
+              return;
+            }
+
+            menu.classList.remove("show");
+            toggle.setAttribute("aria-expanded", "false");
+          });
+        });
       });
     </script>
     {% block extra_js %}{% endblock %}

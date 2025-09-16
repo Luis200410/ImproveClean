@@ -1,98 +1,198 @@
 {% extends "base.html" %}
-{% block title %}ImproveClean | Premium Cleaning Services{% endblock %}
+{% block title %}ImproveClean | Luxury Cleaning Concierge{% endblock %}
 {% block content %}
-<section class="hero row align-items-center mt-4">
-  <div class="col-lg-6">
-    <h1 class="display-5 fw-bold mb-3 text-primary">
-      Premium cleaning teams ready when you are
-    </h1>
-    <p class="lead text-muted">
-      ImproveClean delivers hotel-grade cleaning for homes and offices with transparent scheduling, vetted professionals, and proactive communication.
-    </p>
-    <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
-      <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Create your account</a>
-      <a class="btn btn-outline-primary btn-lg" href="#services">Explore services</a>
-    </div>
-  </div>
-  <div class="col-lg-6 mt-4 mt-lg-0 text-center">
-    <img
-      src="https://images.unsplash.com/photo-1581579186989-4c05ff15f6e5?auto=format&fit=crop&w=1000&q=80"
-      class="img-fluid rounded shadow-lg"
-      alt="Professional cleaners at work"
-    />
-  </div>
-</section>
-
-<section id="services" class="mt-5">
-  <div class="row text-center g-4">
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title fw-semibold">Standard Cleaning</h3>
-          <p class="card-text text-muted">
-            Recurring weekly or bi-weekly visits to keep your space spotless.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title fw-semibold">Deep &amp; Seasonal</h3>
-          <p class="card-text text-muted">
-            Intensive cleanings targeting buildup, appliances, and detail work.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title fw-semibold">Move In/Out</h3>
-          <p class="card-text text-muted">
-            Prepare properties for new residents with our turnover specialists.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="about" class="mt-5">
-  <div class="row align-items-center g-4">
+<section class="landing-hero animate-fade-up">
+  <div class="row align-items-center g-5">
     <div class="col-lg-6">
-      <img
-        src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80"
-        class="img-fluid rounded"
-        alt="Cleaning team preparing supplies"
-      />
-    </div>
-    <div class="col-lg-6">
-      <h2 class="fw-bold">Your facilities partner</h2>
-      <p class="text-muted">
-        We combine streamlined scheduling with quality control to ensure every visit exceeds expectations. Monitor your bookings, provide feedback, and adjust services all from your dashboard.
+      <span class="badge rounded-pill bg-primary-soft text-uppercase mb-3 fw-semibold">New York concierge cleaning</span>
+      <h1 class="display-5 fw-bold mb-4">Tailored cleaning programs that keep your properties showcase ready</h1>
+      <p class="lead text-secondary mb-4">
+        ImproveClean pairs vetted professionals with proactive scheduling, quality audits, and 24/7 concierge support—built exclusively for New York City residences and workplaces.
       </p>
-      <div class="d-flex align-items-center gap-4 mt-3">
+      <div class="d-flex flex-column flex-sm-row gap-3">
+        <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Start planning</a>
+        <a class="btn btn-outline-primary btn-lg" href="{% url 'services' %}">Explore services</a>
+      </div>
+      <div class="hero-metrics d-flex flex-wrap gap-4 mt-5">
         <div>
-          <h3 class="fw-bold text-primary mb-0">98%</h3>
-          <small class="text-muted">Client satisfaction rate</small>
+          <span class="metric-value">400+</span>
+          <span class="metric-label">Properties maintained</span>
         </div>
         <div>
-          <h3 class="fw-bold text-primary mb-0">24/7</h3>
-          <small class="text-muted">Client concierge support</small>
+          <span class="metric-value">4.9/5</span>
+          <span class="metric-label">Average client rating</span>
+        </div>
+        <div>
+          <span class="metric-value">6 hrs</span>
+          <span class="metric-label">Rush response window</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="hero-stack">
+        <img
+          src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1100&q=80"
+          alt="Luxury living room ready for guests"
+          class="rounded-5 shadow-lg"
+          loading="lazy"
+        />
+        <div class="hero-card-mini shadow-lg">
+          <div class="d-flex align-items-center gap-3">
+            <span class="hero-card-avatar" style="background-image: url('https://images.unsplash.com/photo-1525131017868-327f6b0037a7?auto=format&fit=crop&w=200&q=80');"></span>
+            <div>
+              <div class="fw-semibold">Jamie O. &middot; Tribeca</div>
+              <div class="text-muted small">Recurring deep cleaning · Rush enabled</div>
+            </div>
+          </div>
+          <p class="text-muted small mb-0 mt-3">
+            “ImproveClean’s team feels like an extension of our staff. The concierge verifies every visit and adapts to our residents’ needs flawlessly.”
+          </p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="contact" class="mt-5 text-center">
-  <div class="bg-primary text-white p-5 rounded-4 shadow-lg">
-    <h2 class="fw-bold mb-3">Ready for a better clean?</h2>
-    <p class="mb-4">
-      Our team is on call to create a custom cleaning plan that fits your operations and your budget.
-    </p>
-    <a class="btn btn-light btn-lg" href="mailto:hello@improveclean.com">Talk with sales</a>
+<section class="landing-services animate-fade-up" style="--delay: .05s">
+  <div class="section-header text-center mb-4">
+    <span class="badge rounded-pill bg-primary-soft text-uppercase">What we deliver</span>
+    <h2 class="fw-semibold mt-3">Comprehensive programs for every property type</h2>
+    <p class="text-muted">Choose from our curated cleaning tracks or create a hybrid plan with your concierge.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="landing-service-card h-100">
+        <div class="icon-circle">
+          <span class="material-icon">home</span>
+        </div>
+        <h3 class="h5 fw-semibold mb-2">Residence Care</h3>
+        <p class="text-muted mb-3">
+          Weekly or bi-weekly refreshes for penthouses, brownstones, and pied-à-terres. Maintain a consistent housekeeping team you know by name.
+        </p>
+        <ul class="text-muted small">
+          <li>Custom checklists per room</li>
+          <li>Linen, pantry, and wardrobe resets</li>
+          <li>Eco-forward supplies for sensitive finishes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="landing-service-card h-100">
+        <div class="icon-circle">
+          <span class="material-icon">corporate_fare</span>
+        </div>
+        <h3 class="h5 fw-semibold mb-2">Workplace Programs</h3>
+        <p class="text-muted mb-3">
+          Day porters and after-hours crews for headquarter campuses, coworking hubs, and production studios with adherence to brand standards.
+        </p>
+        <ul class="text-muted small">
+          <li>Touchpoint disinfection &amp; supply restock</li>
+          <li>Secure access and badge alignment</li>
+          <li>Air-quality checks and reporting</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="landing-service-card h-100">
+        <div class="icon-circle">
+          <span class="material-icon">event_available</span>
+        </div>
+        <h3 class="h5 fw-semibold mb-2">Event &amp; Turnover</h3>
+        <p class="text-muted mb-3">
+          Rush-ready teams for open houses, showings, and cultural venues. Reset spaces in hours with before/after documentation included.
+        </p>
+        <ul class="text-muted small">
+          <li>Rush mobilization in under 6 hours</li>
+          <li>Detailed photo and video proof</li>
+          <li>Consumable inventory pull &amp; restock</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-differentiators animate-fade-up" style="--delay: .1s">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <div class="differentiator-card">
+        <h2 class="fw-semibold mb-3">Why ImproveClean</h2>
+        <p class="text-muted">We operate as your facilities partner, not a gig platform. Our concierge team monitors every visit, and our specialists are background-checked employees.</p>
+        <ul class="text-muted">
+          <li><strong>Concierge control:</strong> Service adjustments, rush requests, and quality follow-ups from a single contact.</li>
+          <li><strong>Data-backed quality:</strong> Digital checklists, scorecards, and feedback loops built into the dashboard.</li>
+          <li><strong>NYC-native expertise:</strong> Teams trained for landmark buildings, amenities, and union guidelines.</li>
+        </ul>
+        <div class="d-flex gap-3 mt-4">
+          <a class="btn btn-outline-primary" href="{% url 'about' %}">Meet the team</a>
+          <a class="btn btn-primary" href="mailto:hello@improveclean.com">Talk with concierge</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="grid-gallery">
+        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80" alt="Polished kitchen" class="rounded-4 shadow-lg" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1525104698733-6f1a0d4d23f3?auto=format&fit=crop&w=900&q=80" alt="Workplace cleaning" class="rounded-4 shadow-lg" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1581579186989-4c05ff15f6e5?auto=format&fit=crop&w=900&q=80" alt="Cleaning professional" class="rounded-4 shadow-lg" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-testimonials animate-fade-up" style="--delay: .15s">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="testimonial-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="worker-avatar" style="background-image: url('https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80');"></span>
+          <div>
+            <div class="fw-semibold">Lena Cho</div>
+            <span class="text-muted small">Operations, Gramercy Residences</span>
+          </div>
+        </div>
+        <p class="text-muted mb-0">
+          “They respond to rush calls within hours and keep impeccable notes so every cleaner knows the nuances of our units.”
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="testimonial-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="worker-avatar" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80');"></span>
+          <div>
+            <div class="fw-semibold">Priya Nambiar</div>
+            <span class="text-muted small">Facilities, Midtown Creative Hub</span>
+          </div>
+        </div>
+        <p class="text-muted mb-0">
+          “Our offices have never looked better. ImproveClean’s dashboard gives us eyes on every floor without being onsite.”
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="testimonial-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <span class="worker-avatar" style="background-image: url('https://images.unsplash.com/photo-1573497491765-dccce02f8590?auto=format&fit=crop&w=200&q=80');"></span>
+          <div>
+            <div class="fw-semibold">Hannah Rhodes</div>
+            <span class="text-muted small">Director, Halo Ventures</span>
+          </div>
+        </div>
+        <p class="text-muted mb-0">
+          “The ImproveClean concierge feels like part of our team—no missed communication and the site is always guest ready.”
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-cta animate-fade-up" style="--delay: .2s">
+  <div class="cta-banner text-center rounded-4 p-5">
+    <h2 class="fw-bold mb-3">Let’s craft your NYC cleaning roadmap</h2>
+    <p class="text-white-50 mb-4">Share your property portfolio and service cadence—we’ll deliver a proposal in one business day.</p>
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+      <a class="btn btn-light btn-lg" href="{% url 'register' %}">Create account</a>
+      <a class="btn btn-outline-light btn-lg" href="mailto:hello@improveclean.com">Schedule a walkthrough</a>
+    </div>
   </div>
 </section>
 {% endblock %}

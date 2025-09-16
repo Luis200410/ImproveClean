@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}My Account | ImproveClean{% endblock %}
+{% block content %}
+<div class="row g-4 justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <h1 class="h4 fw-bold mb-3">Account overview</h1>
+        <p class="text-muted mb-4">
+          Review your ImproveClean profile, update contact details, and keep your credentials current for seamless scheduling.
+        </p>
+        <dl class="row mb-0">
+          <dt class="col-sm-4 text-muted">Name</dt>
+          <dd class="col-sm-8">{{ request.user.get_full_name|default:request.user.username }}</dd>
+
+          <dt class="col-sm-4 text-muted">Email</dt>
+          <dd class="col-sm-8">{{ request.user.email|default:"Not provided" }}</dd>
+
+          <dt class="col-sm-4 text-muted">Username</dt>
+          <dd class="col-sm-8">{{ request.user.username }}</dd>
+
+          <dt class="col-sm-4 text-muted">Member since</dt>
+          <dd class="col-sm-8">{{ request.user.date_joined|date:"F j, Y" }}</dd>
+
+          <dt class="col-sm-4 text-muted">Upcoming bookings</dt>
+          <dd class="col-sm-8">{{ request.user.bookings.filter(status__in=('scheduled','in_progress')).count }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-semibold mb-3">Security &amp; preferences</h2>
+        <p class="text-muted">Manage your account settings from the dashboard or contact our concierge team for tailored requests.</p>
+        <div class="d-flex flex-column flex-sm-row gap-3 mt-3">
+          <a class="btn btn-primary" href="{% url 'dashboard' %}">Manage bookings</a>
+          <a class="btn btn-outline-primary" href="mailto:hello@improveclean.com">Contact concierge</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

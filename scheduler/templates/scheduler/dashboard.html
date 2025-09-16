@@ -18,17 +18,94 @@
     <div class="card shadow-sm border-0 h-100">
       <div class="card-body">
         <h2 class="h5 fw-semibold mb-3">Schedule a cleaning</h2>
-        <form method="post">
+        <form method="post" class="booking-form">
           {% csrf_token %}
-          {% for field in form %}
           <div class="mb-3">
-            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% for error in field.errors %}
+            <label class="form-label" for="{{ form.service_type.id_for_label }}">Service type</label>
+            {{ form.service_type }}
+            {% for error in form.service_type.errors %}
             <div class="text-danger small">{{ error }}</div>
             {% endfor %}
           </div>
-          {% endfor %}
+
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.scheduled_for.id_for_label }}">When should we arrive?</label>
+            {{ form.scheduled_for }}
+            {% for error in form.scheduled_for.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.address.id_for_label }}">Service address</label>
+            {{ form.address }}
+            {% for error in form.address.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label d-block">Choose your specialist</label>
+            <div class="worker-selector">
+              <label class="worker-option{% if not selected_worker_id %} is-selected{% endif %}">
+                <input
+                  class="visually-hidden"
+                  type="radio"
+                  name="{{ form.worker.name }}"
+                  value=""
+                  {% if not selected_worker_id %}checked{% endif %}
+                />
+                <span class="worker-avatar no-photo">AC</span>
+                <span class="worker-meta">
+                  <span class="worker-name">No preference</span>
+                  <span class="worker-role text-muted">We'll match the best-fit team member.</span>
+                </span>
+              </label>
+              {% for worker in workers %}
+              <label class="worker-option{% if worker.id|stringformat:"s" == selected_worker_id|stringformat:"s" %} is-selected{% endif %}" data-worker-id="{{ worker.id }}">
+                <input
+                  class="visually-hidden"
+                  type="radio"
+                  name="{{ form.worker.name }}"
+                  value="{{ worker.id }}"
+                  {% if worker.id|stringformat:"s" == selected_worker_id|stringformat:"s" %}checked{% endif %}
+                />
+                <span class="worker-avatar" style="{% if worker.photo_url %}background-image: url('{{ worker.photo_url }}');{% endif %}">
+                  {% if not worker.photo_url %}{{ worker.name|first }}{% endif %}
+                </span>
+                <span class="worker-meta">
+                  <span class="worker-name">{{ worker.name }}</span>
+                  <span class="worker-role text-muted">{{ worker.get_service_focus_display }} · {{ worker.experience_years }} yrs exp.</span>
+                </span>
+              </label>
+              {% empty %}
+              <p class="text-muted small mb-0">No professionals match your current filters. Adjust the filters below to see more options.</p>
+              {% endfor %}
+            </div>
+            {% for error in form.worker.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3 form-check">
+            {{ form.rush_cleaning }}
+            <label class="form-check-label" for="{{ form.rush_cleaning.id_for_label }}">Rush cleaning</label>
+            {% if form.rush_cleaning.help_text %}
+            <div class="form-text">{{ form.rush_cleaning.help_text }}</div>
+            {% endif %}
+            {% for error in form.rush_cleaning.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.notes.id_for_label }}">Notes for your crew</label>
+            {{ form.notes }}
+            {% for error in form.notes.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+
           <div class="d-grid">
             <button class="btn btn-primary" type="submit">Add booking</button>
           </div>
@@ -48,19 +125,44 @@
               <tr>
                 <th scope="col">Service</th>
                 <th scope="col">Date</th>
-                <th scope="col">Address</th>
+                <th scope="col">Professional</th>
                 <th scope="col">Status</th>
+                <th scope="col">Rush</th>
                 <th scope="col" class="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for booking in bookings %}
               <tr>
-                <td>{{ booking.service_type|title }}</td>
+                <td>
+                  <div class="fw-semibold text-capitalize">{{ booking.get_service_type_display }}</div>
+                  <div class="text-muted small">{{ booking.address }}</div>
+                </td>
                 <td>{{ booking.scheduled_for|date:"M d, Y" }} <span class="text-muted">{{ booking.scheduled_for|time:"H:i" }}</span></td>
-                <td>{{ booking.address }}</td>
+                <td>
+                  {% if booking.worker %}
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="worker-avatar worker-avatar-table" style="{% if booking.worker.photo_url %}background-image: url('{{ booking.worker.photo_url }}');{% endif %}">
+                      {% if not booking.worker.photo_url %}{{ booking.worker.name|first }}{% endif %}
+                    </span>
+                    <div>
+                      <div class="fw-semibold">{{ booking.worker.name }}</div>
+                      <div class="text-muted small">{{ booking.worker.get_service_focus_display }}</div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <span class="text-muted small">Assigned by concierge</span>
+                  {% endif %}
+                </td>
                 <td>
                   <span class="badge status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                </td>
+                <td>
+                  {% if booking.rush_cleaning %}
+                  <span class="badge bg-warning-subtle text-warning-emphasis">Rush</span>
+                  {% else %}
+                  <span class="badge bg-light text-muted">Standard</span>
+                  {% endif %}
                 </td>
                 <td class="text-end">
                   {% if booking.status != 'cancelled' %}
@@ -87,4 +189,109 @@
     </div>
   </div>
 </div>
+
+<div class="card shadow-sm border-0 mt-4">
+  <div class="card-body">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center mb-3">
+      <div>
+        <h2 class="h5 fw-semibold mb-1">Available professionals</h2>
+        <p class="text-muted mb-0">Filter by service focus or search by name to find the perfect fit.</p>
+      </div>
+      <form class="row g-2" method="get">
+        <div class="col-auto">
+          <select class="form-select form-select-sm" name="team_service">
+            <option value="">All services</option>
+            {% for value, label in service_choices %}
+            <option value="{{ value }}" {% if team_service == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-auto">
+          <input
+            class="form-control form-control-sm"
+            type="search"
+            name="team_search"
+            placeholder="Search name"
+            value="{{ team_search }}"
+          />
+        </div>
+        <div class="col-auto d-flex gap-2">
+          <button class="btn btn-outline-primary btn-sm" type="submit">Filter</button>
+          {% if team_service or team_search %}
+          <a class="btn btn-link btn-sm" href="{% url 'dashboard' %}">Reset</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <div class="row g-3">
+      {% for worker in workers %}
+      <div class="col-md-6 col-xl-4">
+        <div class="worker-card h-100">
+          <div class="d-flex align-items-center gap-3">
+            <span class="worker-avatar" style="{% if worker.photo_url %}background-image: url('{{ worker.photo_url }}');{% endif %}">
+              {% if not worker.photo_url %}{{ worker.name|first }}{% endif %}
+            </span>
+            <div>
+              <div class="fw-semibold">{{ worker.name }}</div>
+              <div class="text-muted small">{{ worker.headline|default:worker.get_service_focus_display }}</div>
+            </div>
+          </div>
+          <p class="text-muted small mt-3 mb-3">{{ worker.bio|default:"Dedicated member of the ImproveClean concierge team." }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge bg-light text-muted">{{ worker.experience_years }} yrs experience</span>
+            <button class="btn btn-sm btn-outline-primary worker-select-trigger" type="button" data-worker-id="{{ worker.id }}">
+              Choose {{ worker.name }}
+            </button>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info mb-0">No team members match the filters. Try changing the service focus or search term.</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const workerRadios = document.querySelectorAll('.worker-selector input[type="radio"]');
+    const workerOptions = document.querySelectorAll(".worker-option");
+
+    function setSelected(workerId) {
+      workerRadios.forEach(function (radio) {
+        const option = radio.closest(".worker-option");
+        const matches = workerId === null ? radio.value === "" : radio.value === String(workerId);
+        radio.checked = matches;
+        if (option) {
+          option.classList.toggle("is-selected", matches);
+        }
+      });
+    }
+
+    workerOptions.forEach(function (option) {
+      option.addEventListener("click", function (event) {
+        const input = option.querySelector('input[type="radio"]');
+        if (input) {
+          setSelected(input.value || null);
+        }
+      });
+    });
+
+    document.querySelectorAll(".worker-select-trigger").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const workerId = button.getAttribute("data-worker-id");
+        setSelected(workerId);
+        const scheduleCard = document.querySelector(".booking-form");
+        if (scheduleCard) {
+          scheduleCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

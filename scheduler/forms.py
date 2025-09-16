@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from .models import Booking
+from .models import Booking, SERVICE_CHOICES, Worker
 
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -45,18 +45,33 @@ class BookingForm(forms.ModelForm):
             attrs={"type": "datetime-local", "class": "form-control"}
         )
     )
+    worker = forms.ModelChoiceField(
+        queryset=Worker.objects.none(),
+        required=False,
+        empty_label="No preference",
+        widget=forms.RadioSelect(attrs={"class": "visually-hidden worker-choice"}),
+        label="Preferred professional",
+    )
+    rush_cleaning = forms.BooleanField(
+        required=False,
+        label="Rush cleaning",
+        help_text="Rush cleanings are prioritized within 6 hours and incur an additional fee.",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
+    )
 
     class Meta:
         model = Booking
-        fields = ("service_type", "scheduled_for", "address", "notes")
+        fields = (
+            "service_type",
+            "scheduled_for",
+            "address",
+            "worker",
+            "rush_cleaning",
+            "notes",
+        )
         widgets = {
             "service_type": forms.Select(
-                choices=[
-                    ("standard", "Standard Cleaning"),
-                    ("deep", "Deep Cleaning"),
-                    ("move_out", "Move In/Out"),
-                    ("office", "Office Cleaning"),
-                ],
+                choices=SERVICE_CHOICES,
                 attrs={"class": "form-select"},
             ),
             "address": forms.TextInput(attrs={"class": "form-control"}),
@@ -65,7 +80,10 @@ class BookingForm(forms.ModelForm):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        self.fields["worker"].queryset = Worker.objects.filter(is_active=True)
         for name, field in self.fields.items():
+            if name in ("rush_cleaning", "worker"):
+                continue
             if name not in self.Meta.widgets:
                 field.widget.attrs.setdefault("class", "form-control")
 

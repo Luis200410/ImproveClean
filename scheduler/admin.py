@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 
-from .models import Booking
+from .models import Booking, Worker
 
 
 class BookingAdmin(admin.ModelAdmin):
@@ -17,6 +17,12 @@ class BookingAdmin(admin.ModelAdmin):
     ordering = ("-scheduled_for",)
 
 
+class WorkerAdmin(admin.ModelAdmin):
+    list_display = ("name", "service_focus", "experience_years", "is_active")
+    list_filter = ("service_focus", "is_active")
+    search_fields = ("name", "headline")
+
+
 class SuperuserAdminSite(AdminSite):
     site_header = "ImproveClean Administration"
     site_title = "ImproveClean Admin"
@@ -28,3 +34,4 @@ class SuperuserAdminSite(AdminSite):
 
 admin_site = SuperuserAdminSite(name="superuser_admin")
 admin_site.register(Booking, BookingAdmin)
+admin_site.register(Worker, WorkerAdmin)

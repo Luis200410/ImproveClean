@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from .forms import BookingForm, SignupForm, StyledAuthenticationForm
-from .models import Booking
+from .models import Booking, SERVICE_CHOICES, Worker
 
 
 class LandingView(TemplateView):
@@ -22,6 +22,10 @@ class AboutView(TemplateView):
 
 class ServicesView(TemplateView):
     template_name = "scheduler/services.html"
+
+
+class AccountView(LoginRequiredMixin, TemplateView):
+    template_name = "scheduler/account.html"
 
 
 class RegisterView(FormView):
@@ -57,8 +61,36 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["bookings"] = self.request.user.bookings.all()
-        context["form"] = kwargs.get("form") or BookingForm()
+        bookings = (
+            self.request.user.bookings.select_related("worker").all()
+        )
+        context["bookings"] = bookings
+
+        form = kwargs.get("form") or BookingForm()
+        context["form"] = form
+
+        selected_worker_id = form["worker"].value()
+        service_focus = self.request.GET.get("team_service")
+        search_query = self.request.GET.get("team_search", "").strip()
+
+        workers = Worker.objects.filter(is_active=True)
+        if service_focus:
+            workers = workers.filter(service_focus=service_focus)
+        if search_query:
+            workers = workers.filter(name__icontains=search_query)
+        if selected_worker_id:
+            workers = workers | Worker.objects.filter(pk=selected_worker_id)
+        workers = workers.distinct().order_by("name")
+
+        context.update(
+            {
+                "workers": workers,
+                "team_service": service_focus or "",
+                "team_search": search_query,
+                "service_choices": SERVICE_CHOICES,
+                "selected_worker_id": selected_worker_id,
+            }
+        )
         return context
 
     def post(self, request, *args, **kwargs):
@@ -67,9 +99,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             booking = form.save(commit=False)
             booking.user = request.user
             booking.save()
+            worker_text = (
+                f" with {booking.worker.name}" if booking.worker else ""
+            )
+            rush_text = " Rush service requested." if booking.rush_cleaning else ""
             messages.success(
                 request,
-                "Your cleaning has been scheduled. Our team will confirm the details shortly.",
+                "Your cleaning has been scheduled"
+                f"{worker_text}. Our team will confirm the details shortly.{rush_text}",
             )
             return redirect("dashboard")
         messages.error(request, "Please correct the highlighted errors to book your cleaning.")
